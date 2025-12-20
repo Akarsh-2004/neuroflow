@@ -1,0 +1,19 @@
+procs:
+  next:
+    cmd: ["npm", "run", "dev"]
+    cwd: .
+    env:
+      PORT: "3000"
+    autostart: true
+    color: blue
+    logfile: .mprocs/next.log
+
+  inngest:
+    cmd: ["npx", "inngest-cli@latest", "dev", "-u", "http://localhost:3000/api/inngest"]
+    cwd: .
+    env:
+      INNGEST_EVENT_KEY: "local-dev-key"
+      INNGEST_SIGNING_KEY: "local-signing-key"
+    autostart: true
+    color: green
+    logfile: .mprocs/inngest.log
