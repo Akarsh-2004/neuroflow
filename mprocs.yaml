@@ -1,6 +1,7 @@
 procs:
   next:
-    cmd: ["npm", "run", "dev"]
+    cmd: npm run dev
+    shell: true
     cwd: .
     env:
       PORT: "3000"
@@ -9,7 +10,8 @@ procs:
     logfile: .mprocs/next.log
 
   inngest:
-    cmd: ["npx", "inngest-cli@latest", "dev", "-u", "http://localhost:3000/api/inngest"]
+    cmd: npx inngest-cli@latest dev -u http://localhost:3000/api/inngest
+    shell: true
     cwd: .
     env:
       INNGEST_EVENT_KEY: "local-dev-key"

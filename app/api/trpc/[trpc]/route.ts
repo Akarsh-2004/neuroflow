@@ -1,14 +1,18 @@
+// app/api/trpc/[trpc]/route.ts
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '@/app/trpc/router';
-import { createTrpcContext } from '@/app/trpc/init';
+import { type NextRequest } from 'next/server';
+import { appRouter } from '~/server/api/root';
+import { createTRPCContext } from '~/server/api/trpc';
 
-const handler = (req: Request) => {
-  return fetchRequestHandler({
+const handler = (req: NextRequest) =>
+  fetchRequestHandler({
     endpoint: '/api/trpc',
-    req,
+    req: req as unknown as Request,
     router: appRouter,
-    createContext: createTrpcContext,
+    createContext: () => createTRPCContext({ 
+      req: req as unknown as Request, 
+      resHeaders: new Headers() 
+    }),
   });
-};
 
 export { handler as GET, handler as POST };
