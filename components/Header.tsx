@@ -3,10 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { Brain, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -30,29 +33,42 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
+          <a href="/#features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
             Features
           </a>
-          <a href="#how" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
+          <a href="/#how" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
             How it works
           </a>
-          <a href="#pricing" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
+          <a href="/#pricing" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
             Pricing
           </a>
-          <a 
-            href="/auth/login" 
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm"
-          >
-            Sign In
-          </a>
-          <Button 
-            asChild
-            size="sm" 
-            variant="outline" 
-            className="border-white/20 text-white hover:bg-white/10 bg-black/20 backdrop-blur-sm"
-          >
-            <a href="/auth/register">Get Started</a>
-          </Button>
+          {session ? (
+            <>
+              <Link href="/dashboard" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
+                Dashboard
+              </Link>
+              <Link href="/billing" className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">
+                Billing
+              </Link>
+            </>
+          ) : (
+            <>
+              <a 
+                href="/auth/login" 
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm"
+              >
+                Sign In
+              </a>
+              <Button 
+                asChild
+                size="sm" 
+                variant="outline" 
+                className="border-white/20 text-white hover:bg-white/10 bg-black/20 backdrop-blur-sm"
+              >
+                <a href="/auth/register">Get Started</a>
+              </Button>
+            </>
+          )}
         </nav>
 
         {/* Mobile menu button */}
@@ -69,40 +85,53 @@ export default function Header() {
       {isOpen && (
         <div className="absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl p-6 flex flex-col gap-6 md:hidden animate-in slide-in-from-top-5">
           <a 
-            href="#features" 
+            href="/#features" 
             className="text-lg font-medium text-gray-200 hover:text-indigo-400 transition-colors"
             onClick={() => setIsOpen(false)}
           >
             Features
           </a>
           <a 
-            href="#how" 
+            href="/#how" 
             className="text-lg font-medium text-gray-200 hover:text-indigo-400 transition-colors"
             onClick={() => setIsOpen(false)}
           >
             How it works
           </a>
           <a 
-            href="#pricing" 
+            href="/#pricing" 
             className="text-lg font-medium text-gray-200 hover:text-indigo-400 transition-colors"
             onClick={() => setIsOpen(false)}
           >
             Pricing
           </a>
           <div className="h-px bg-white/10 w-full my-2" />
-          <Button 
-            asChild
-            variant="outline"
-            className="w-full bg-black/30 border-gray-700 text-white hover:bg-gray-800/50"
-          >
-            <a href="/auth/login">Sign In</a>
-          </Button>
-          <Button 
-            asChild
-            className="w-full bg-white text-black hover:bg-gray-200"
-          >
-            <a href="/auth/register">Get Started</a>
-          </Button>
+          {session ? (
+            <>
+              <Link href="/dashboard" className="text-lg font-medium text-gray-200 hover:text-indigo-400 transition-colors" onClick={() => setIsOpen(false)}>
+                Dashboard
+              </Link>
+              <Link href="/billing" className="text-lg font-medium text-gray-200 hover:text-indigo-400 transition-colors" onClick={() => setIsOpen(false)}>
+                Billing
+              </Link>
+            </>
+          ) : (
+            <>
+              <Button 
+                asChild
+                variant="outline"
+                className="w-full bg-black/30 border-gray-700 text-white hover:bg-gray-800/50"
+              >
+                <a href="/auth/login">Sign In</a>
+              </Button>
+              <Button 
+                asChild
+                className="w-full bg-white text-black hover:bg-gray-200"
+              >
+                <a href="/auth/register">Get Started</a>
+              </Button>
+            </>
+          )}
         </div>
       )}
     </header>
